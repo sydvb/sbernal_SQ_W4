@@ -22,26 +22,21 @@
 // STATE_PLAY, JavaScript will throw an error instead of
 // silently using the wrong string.
 // ------------------------------------------------------------
+const CHOICE_1 = "choice1";
+const CHOICE_2 = "choice2";
+
 const STATE_START = "start";
-const STATE_PLAY  = "play";
-const STATE_OVER  = "over";
+const STATE_PLAY = "play";
+const STATE_OVER = "over";
 
 let gameState = STATE_START;
-
-// ------------------------------------------------------------
-// BLOB ANIMATION TIMERS
-// Increase each frame to drive the blob wobble animation.
-// npcBlobT starts at 50 so the blobs wobble differently.
-// ------------------------------------------------------------
-let playerBlobT = 0;
-let npcBlobT = 50;
 
 // ------------------------------------------------------------
 // BUTTON LAYOUT
 // Shared constants for button positions and size.
 // Defined once here so sketch.js and scenes.js stay in sync.
 // ------------------------------------------------------------
-const BTN_POSITIONS = [200, 400, 600];
+const BTN_POSITIONS = [300, 500];
 const BTN_W = 150;
 const BTN_H = 52;
 const BTN_Y = 360;
@@ -74,10 +69,6 @@ function draw() {
   } else if (gameState === STATE_OVER) {
     drawGameOverScreen();
   }
-
-  // Advance blob animations every frame regardless of state
-  playerBlobT += 0.015;
-  npcBlobT += 0.015;
 }
 
 // ============================================================
@@ -87,45 +78,13 @@ function draw() {
 // Handles button clicks across all game states.
 // ============================================================
 function mousePressed() {
-  // --- Start screen ---
-  if (gameState === STATE_START) {
-    if (isMouseOver(width / 2, 390, 200, 52)) {
-      gameState = STATE_PLAY;
-    }
-  }
+  if (gameState === STATE_PLAY) {
+    let choices = [CHOICE_1, CHOICE_2];
 
-  // --- Play screen ---
-  else if (gameState === STATE_PLAY) {
-    if (playerChoice === null) {
-      // Choice buttons — ROCK, PAPER, SCISSORS defined in game.js
-      let choices = [ROCK, PAPER, SCISSORS];
-      for (let i = 0; i < 3; i++) {
-        if (isMouseOver(BTN_POSITIONS[i], BTN_Y, BTN_W, BTN_H)) {
-          // playerChoose() is defined in game.js
-          // It sets playerChoice, npcChoice, roundResult, and updates scores
-          playerChoose(choices[i]);
-        }
+    for (let i = 0; i < 2; i++) {
+      if (isMouseOver(BTN_POSITIONS[i], BTN_Y, BTN_W, BTN_H)) {
+        storyChoose(choices[i]);
       }
-    } else {
-      // Next Round or See Result button
-      if (isMouseOver(width / 2, 390, 200, 52)) {
-        if (gameOver) {
-          // gameOver is set in game.js when someone reaches 2 wins
-          gameState = STATE_OVER;
-        } else {
-          // nextRound() advances the round counter and clears choices
-          nextRound();
-        }
-      }
-    }
-  }
-
-  // --- Game over screen ---
-  else if (gameState === STATE_OVER) {
-    if (isMouseOver(width / 2, 390, 220, 52)) {
-      // resetGame() resets all scores and choices for a new game
-      resetGame();
-      gameState = STATE_PLAY;
     }
   }
 }

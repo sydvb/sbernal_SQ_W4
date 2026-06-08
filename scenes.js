@@ -13,48 +13,12 @@
 // Calling background() every frame clears the previous frame,
 // which is what creates the illusion of animation.
 // ------------------------------------------------------------
-function drawBackground() {
-  background(10);
+function preload() {
+  forest = loadImage("assets/images/forest.jpg");
 }
 
-// ------------------------------------------------------------
-// drawBlob(x, y, r, col, t)
-// Draws a noise blob at the given position and size.
-// Called with different arguments for the player and NPC blobs.
-//
-// x, y — centre position of the blob
-// r    — radius of the blob
-// col  — p5 color object (e.g. color(0, 200, 180))
-// t    — animation time; increases each frame to drive the wobble
-// ------------------------------------------------------------
-function drawBlob(x, y, r, col, t) {
-  push();
-  fill(col);
-  noStroke();
-
-  beginShape();
-  let numPoints = 48; // more points = smoother shape
-  for (let i = 0; i < numPoints; i++) {
-    let angle = (TWO_PI / numPoints) * i;
-
-    // noise() returns a smooth random value between 0 and 1.
-    // We use it to push each vertex slightly in or out.
-    let noiseVal = noise(cos(angle) * 0.8 + t, sin(angle) * 0.8 + t);
-
-    // map() converts noise (0–1) to a radius offset (-8 to +8 pixels)
-    let nr = r + map(noiseVal, 0, 1, -8, 8);
-
-    // Convert polar coordinates (angle, radius) to x/y
-    vertex(x + cos(angle) * nr, y + sin(angle) * nr);
-  }
-  endShape(CLOSE);
-
-  // Eyes
-  fill(10);
-  ellipse(x - 9, y - 7, 8, 8);
-  ellipse(x + 9, y - 7, 8, 8);
-
-  pop();
+function drawBackground() {
+  background(forest);
 }
 
 // ------------------------------------------------------------
@@ -114,24 +78,17 @@ function drawStartScreen() {
   // Title
   fill(255);
   textAlign(CENTER);
-  textSize(52);
-  text("Blob Rock, Paper, Scissors", width / 2, 140);
+  textSize(48);
+  text("Begin the Queen's adventure.", width / 2, height / 2 + 50);
 
   // Subtitle
-  fill(160);
+  fill(220);
   textSize(16);
-  text("Rock. Paper. Scissors.", width / 2, 185);
-  text("Best of 3 rounds wins.", width / 2, 210);
-
-  // Blobs — animated using frameCount since blobT isn't
-  // available here (it lives in sketch.js)
-  drawBlob(220, 300, 50, color(0, 200, 180), frameCount * 0.015);
-  drawBlob(580, 300, 50, color(255, 150, 30), frameCount * 0.015 + 50);
-
-  fill(160);
-  textSize(13);
-  text("You", 220, 365);
-  text("NPC", 580, 365);
+  text(
+    "Will you make it to the end, or meet your own demise?",
+    width / 2,
+    height / 2 + 90,
+  );
 
   // Start button
   drawButton(
@@ -144,111 +101,30 @@ function drawStartScreen() {
   );
 }
 
-// ------------------------------------------------------------
-// drawHUD()
-// HUD = Heads Up Display.
-// Shows the current round number and scores at the top.
-// Reads currentRound, MAX_ROUNDS, playerScore, and npcScore
-// from game.js via shared global scope.
-// ------------------------------------------------------------
-function drawHUD() {
-  noStroke();
-
-  // Round indicator — centred at the top
-  fill(160);
-  textSize(14);
-  textAlign(CENTER);
-  text("Round " + currentRound + " of " + MAX_ROUNDS, width / 2, 30);
-
-  // Player score (left side)
-  fill(0, 200, 180);
-  textSize(28);
-  textAlign(LEFT);
-  text(playerScore, 60, 35);
-
-  fill(160);
-  textSize(13);
-  text("You", 60, 52);
-
-  // NPC score (right side)
-  fill(255, 150, 30);
-  textSize(28);
-  textAlign(RIGHT);
-  text(npcScore, width - 60, 35);
-
-  fill(160);
-  textSize(13);
-  text("NPC", width - 60, 52);
-
-  // Dividing line under the HUD
-  stroke(40);
-  strokeWeight(1);
-  line(0, 60, width, 60);
+function drawStoryScreen() {
+  if (currentNode === NODE_A) drawA();
+  else if (currentNode === NODE_B) drawB();
+  else if (currentNode === NODE_A1) drawA1();
+  else if (currentNode === NODE_A2) drawA2();
+  else if (currentNode === NODE_B1) drawB1();
+  else if (currentNode === NODE_B2) drawB2();
+  else if (currentNode === NODE_A1a) drawA1a();
+  else if (currentNode === NODE_A1b) drawA1b();
+  else if (currentNode === NODE_A2a) drawA2a();
+  else if (currentNode === NODE_A2b) drawA2b();
+  else if (currentNode === NODE_B1a) drawB1a();
+  else if (currentNode === NODE_B1b) drawB1b();
+  else if (currentNode === NODE_B2a) drawB2a();
+  else if (currentNode === NODE_B2b) drawB2b();
 }
 
 // ------------------------------------------------------------
 // drawGameScreen(playerBlobT, npcBlobT)
 // The main gameplay screen shown during STATE_PLAY.
-// Shows the HUD, blobs, choice buttons, and round result.
-// playerBlobT and npcBlobT are passed in from sketch.js
-// so the blobs animate continuously across all screens.
+// Shows the new scene, choice buttons.
 // ------------------------------------------------------------
-function drawGameScreen(playerBlobT, npcBlobT) {
-  drawHUD();
-
-  // Blobs
-  drawBlob(220, 190, 50, color(0, 200, 180), playerBlobT);
-  drawBlob(580, 190, 50, color(255, 150, 30), npcBlobT);
-
-  fill(180);
-  noStroke();
-  textAlign(CENTER);
-  textSize(14);
-  text("You", 220, 265);
-  text("NPC", 580, 265);
-
-  // playerChoice is null before the player picks — set in game.js
-  if (playerChoice !== null) {
-    // Show what each side chose
-    fill(200);
-    textSize(18);
-    textAlign(CENTER);
-    text(playerChoice.toUpperCase(), 220, 300);
-    text(npcChoice.toUpperCase(), 580, 300);
-
-    // Show the round result
-    drawRoundResult();
-
-    // Button label changes depending on whether the game is over
-    let btnLabel =
-      currentRound < MAX_ROUNDS && !gameOver ? "Next Round" : "See Result";
-    drawButton(
-      width / 2,
-      390,
-      200,
-      52,
-      btnLabel,
-      isMouseOver(width / 2, 390, 200, 52),
-    );
-  } else {
-    // Show choice buttons before the player has picked
-    fill(160);
-    textSize(14);
-    textAlign(CENTER);
-    text("Make your choice", width / 2, 295);
-
-    let labels = ["ROCK", "PAPER", "SCISSORS"];
-    for (let i = 0; i < 3; i++) {
-      drawButton(
-        BTN_POSITIONS[i],
-        BTN_Y,
-        BTN_W,
-        BTN_H,
-        labels[i],
-        isMouseOver(BTN_POSITIONS[i], BTN_Y, BTN_W, BTN_H),
-      );
-    }
-  }
+function drawGameScreen() {
+  drawStoryScreen();
 }
 
 // ------------------------------------------------------------
