@@ -15,31 +15,30 @@
 // and risk a typo causing a bug.
 // CHOICES is an array used to pick a random NPC move.
 // ------------------------------------------------------------
-const ROCK     = "rock";
-const PAPER    = "paper";
-const SCISSORS = "scissors";
+const NODE_A = "A";
+const NODE_B = "B";
 
-const CHOICES = [ROCK, PAPER, SCISSORS];
+const NODE_A1 = "A1";
+const NODE_A2 = "A2";
+const NODE_B1 = "B1";
+const NODE_B2 = "B2";
 
-// ------------------------------------------------------------
-// ROUND STATE
-// Tracks the current choices and result for this round.
-// Reset to null at the start of each new round.
-// ------------------------------------------------------------
-let playerChoice = null; // set when player clicks a button
-let npcChoice    = null; // set randomly when player chooses
-let roundResult  = null; // "win", "lose", or "draw"
+const NODE_A1a = "A1a";
+const NODE_A1b = "A1b";
+const NODE_A2a = "A2a";
+const NODE_A2b = "A2b";
 
-// ------------------------------------------------------------
-// SCORE AND ROUND TRACKING
-// playerScore and npcScore count wins across rounds.
-// currentRound tracks which round we are on (1, 2, or 3).
-// MAX_ROUNDS is a constant — the game ends after 3 rounds.
-// ------------------------------------------------------------
-let playerScore  = 0;
-let npcScore     = 0;
-let currentRound = 1;
-const MAX_ROUNDS = 3;
+const NODE_B1a = "B1a";
+const NODE_B1b = "B1b";
+const NODE_B2a = "B2a";
+const NODE_B2b = "B2b";
+
+// Game state constants
+const STATE_START = "start";
+const STATE_PLAY = "play";
+const STATE_OVER = "over";
+
+let currentNode = NODE_A; // Opening screen
 
 // ------------------------------------------------------------
 // GAME OVER STATE
@@ -47,93 +46,26 @@ const MAX_ROUNDS = 3;
 // 3 rounds are played.
 // overallWinner stores "player", "npc", or "draw".
 // ------------------------------------------------------------
-let gameOver       = false;
-let overallWinner  = null;
+let gameOver = false;
+let overallWinner = null;
 
 // ------------------------------------------------------------
-// getNPCChoice()
-// Picks a random choice for the NPC each round.
-// random(array) returns a random element from the array.
-// ------------------------------------------------------------
-function getNPCChoice() {
-  return random(CHOICES);
-}
-
-// ------------------------------------------------------------
-// getResult(player, npc)
-// Works out who wins given the two choices.
-// Returns "win", "lose", or "draw".
-//
-// Win conditions are written out explicitly — no clever maths,
-// just clear readable comparisons that are easy to follow.
-// ------------------------------------------------------------
-function getResult(player, npc) {
-  if (player === npc) return "draw";
-
-  if (
-    (player === ROCK     && npc === SCISSORS) ||
-    (player === PAPER    && npc === ROCK)     ||
-    (player === SCISSORS && npc === PAPER)
-  ) {
-    return "win";
-  }
-
-  return "lose";
-}
-
-// ------------------------------------------------------------
-// playerChoose(choice)
+// storyChoose(choice)
 // Called from sketch.js when the player clicks a button.
-// Sets choices and result, then updates scores.
-// Checks whether the game is over after each round.
-// A player wins as soon as they reach 2 wins, even if
-// all 3 rounds haven't been played yet.
+// Sets choices and result, then leads to next scene.
 // ------------------------------------------------------------
-function playerChoose(choice) {
-  playerChoice = choice;
-  npcChoice    = getNPCChoice();
-  roundResult  = getResult(playerChoice, npcChoice);
 
-  // Update scores based on this round's result
-  if (roundResult === "win")  playerScore++;
-  if (roundResult === "lose") npcScore++;
-
-  // Check if the game is over
-  if (playerScore === 2 || npcScore === 2 || currentRound === MAX_ROUNDS) {
-    gameOver = true;
-
-    // Determine the overall winner
-    if (playerScore > npcScore)      overallWinner = "player";
-    else if (npcScore > playerScore) overallWinner = "npc";
-    else                             overallWinner = "draw";
-  }
-}
-
-// ------------------------------------------------------------
-// nextRound()
-// Called from sketch.js when the Next Round button is clicked.
-// Clears the current choices but keeps the scores intact.
-// ------------------------------------------------------------
-function nextRound() {
-  playerChoice = null;
-  npcChoice    = null;
-  roundResult  = null;
-  currentRound++;
-}
-
-// ------------------------------------------------------------
-// resetGame()
-// Called from sketch.js when Play Again is clicked.
-// Fully resets all scores, choices, and round tracking
-// so a brand new game can begin.
-// ------------------------------------------------------------
-function resetGame() {
-  playerChoice  = null;
-  npcChoice     = null;
-  roundResult   = null;
-  playerScore   = 0;
-  npcScore      = 0;
-  currentRound  = 1;
-  gameOver      = false;
-  overallWinner = null;
+function storyChoose(choice) {
+  if (currentNode === NODE_A)
+    currentNode = choice === CHOICE_1 ? NODE_A1 : NODE_A2;
+  else if (currentNode === NODE_A1)
+    currentNode = choice === CHOICE_1 ? NODE_A1a : NODE_A1b;
+  else if (currentNode === NODE_A2)
+    currentNode = choice === CHOICE_1 ? NODE_A2a : NODE_A2b;
+  else if (currentNode === NODE_B)
+    currentNode = choice === CHOICE_1 ? NODE_B1 : NODE_B2;
+  else if (currentNode === NODE_B1)
+    currentNode = choice === CHOICE_1 ? NODE_B1a : NODE_B1b;
+  else if (currentNode === NODE_B2)
+    currentNode = choice === CHOICE_1 ? NODE_B2a : NODE_B2b;
 }

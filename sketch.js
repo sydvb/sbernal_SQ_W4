@@ -65,7 +65,7 @@ function draw() {
   if (gameState === STATE_START) {
     drawStartScreen();
   } else if (gameState === STATE_PLAY) {
-    drawGameScreen(playerBlobT, npcBlobT);
+    drawGameScreen();
   } else if (gameState === STATE_OVER) {
     drawGameOverScreen();
   }
@@ -78,13 +78,36 @@ function draw() {
 // Handles button clicks across all game states.
 // ============================================================
 function mousePressed() {
-  if (gameState === STATE_PLAY) {
-    let choices = [CHOICE_1, CHOICE_2];
+  // START SCREEN → INTRO
+  if (gameState === STATE_START) {
+    if (isMouseOver(width / 2, 390, 200, 52)) {
+      currentNode = NODE_INTRO;
+      gameState = STATE_PLAY;
+    }
+  }
 
+  // PLAY SCREEN → handle choices
+  else if (gameState === STATE_PLAY) {
+    // INTRO → A
+    if (currentNode === NODE_INTRO) {
+      if (isMouseOver(width / 2, 390, 200, 52)) {
+        currentNode = NODE_A;
+      }
+      return;
+    }
+
+    let choices = [CHOICE_1, CHOICE_2];
     for (let i = 0; i < 2; i++) {
       if (isMouseOver(BTN_POSITIONS[i], BTN_Y, BTN_W, BTN_H)) {
         storyChoose(choices[i]);
       }
+    }
+  }
+
+  // GAME OVER SCREEN → restart
+  else if (gameState === STATE_OVER) {
+    if (isMouseOver(width / 2, 390, 220, 52)) {
+      resetGame();
     }
   }
 }
