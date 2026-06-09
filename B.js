@@ -2,14 +2,19 @@
 
 function drawB() {
   // --- Story text ---
+  fill(10, 150);
+  noStroke();
+  rect(30, 30, width - 60, height - 60, 20);
   fill(255);
-  textAlign(CENTER);
   textSize(22);
+  textAlign(LEFT, TOP);
+  textAlign(LEFT);
   text(
-    "Thick thorns scrape your coat as you push through. The forest is rough, \
-    but you spot signs of travelers—broken branches, old campfires.",
-    width / 2,
-    150,
+    "Thick thorns scrape your coat as you push through. The forest is rough, but you spot signs\
+    of travelers—broken branches, old campfires.",
+    60,
+    70,
+    MAX_WIDTH,
   );
 
   // --- Choice buttons ---
@@ -19,7 +24,7 @@ function drawB() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Follow the floating lights.",
+    "Approach campfire smoke.",
     isMouseOver(BTN_POSITIONS[0], BTN_Y, BTN_W, BTN_H),
   );
 
@@ -29,7 +34,7 @@ function drawB() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Ignore them and take the mossy trail.",
+    "Search underbush.",
     isMouseOver(BTN_POSITIONS[1], BTN_Y, BTN_W, BTN_H),
   );
 }

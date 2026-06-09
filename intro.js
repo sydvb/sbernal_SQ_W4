@@ -2,16 +2,19 @@
 
 function drawIntro() {
   // --- Story text ---
+  fill(10, 150);
+  noStroke();
+  rect(30, 30, width - 60, height - 60, 20);
   fill(255);
-  textAlign(CENTER);
   textSize(22);
+  textAlign(LEFT, TOP);
+  textAlign(LEFT);
   text(
-    "You are Rylin, a lone peddler roaming from forest to forest, chasing rumors of \
-    the Queen’s Lost Crown, a treasure said to grant its finder a lifetime of prosperity.\
-    Your pack is light, your hopes are high, and the path ahead forks into two very \
-    different woods.",
-    width / 2,
-    150,
+    "You are Rylin, a lone peddler roaming from forest to forest, chasing rumors of\
+    the Queen’s Lost Crown, a treasure said to grant its finder a lifetime of prosperity. Your pack is light, your hopes are high, and the path ahead forks into two very different woods.",
+    60,
+    70,
+    MAX_WIDTH,
   );
 
   // --- Choice buttons ---
@@ -21,7 +24,7 @@ function drawIntro() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Enter the Whisperwood -- A forest known for strange lights and wandering spirits.",
+    "Enter the Whisperwood.",
     isMouseOver(BTN_POSITIONS[0], BTN_Y, BTN_W, BTN_H),
   );
 
@@ -31,7 +34,7 @@ function drawIntro() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Enter the Bramblepath -- A harsher forest, full of thorns but rich with hidden trade routes.",
+    "Enter the Bramblepath.",
     isMouseOver(BTN_POSITIONS[1], BTN_Y, BTN_W, BTN_H),
   );
 }

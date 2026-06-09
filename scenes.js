@@ -34,15 +34,11 @@ function drawBackground() {
 // ------------------------------------------------------------
 function drawButton(x, y, w, h, label, isHovered) {
   push();
-  rectMode(CENTER); // x, y are the centre of the rectangle
-
-  // Button background — lighter colour when hovered
+  rectMode(CENTER);
   fill(isHovered ? color(80, 80, 100) : color(40, 40, 60));
   stroke(isHovered ? color(180, 180, 220) : color(80, 80, 100));
   strokeWeight(2);
-  rect(x, y, w, h, 8); // rounded corners
-
-  // Button label — centred inside the button
+  rect(x, y, w, h, 8);
   fill(255);
   noStroke();
   textAlign(CENTER, CENTER);
@@ -101,8 +97,37 @@ function drawStartScreen() {
   );
 }
 
+// ------------------------------------------------------------
+// drawIntro()
+// Your new intro scene
+// ------------------------------------------------------------
+function drawIntro() {
+  fill(255);
+  textAlign(CENTER);
+  textSize(36);
+  text("Your journey begins...", width / 2, height / 2 - 20);
+
+  fill(200);
+  textSize(18);
+  text(
+    "You awaken in the forest. A path splits ahead.",
+    width / 2,
+    height / 2 + 20,
+  );
+
+  drawButton(
+    width / 2,
+    390,
+    200,
+    52,
+    "Continue",
+    isMouseOver(width / 2, 390, 200, 52),
+  );
+}
+
 function drawStoryScreen() {
-  if (currentNode === NODE_A) drawA();
+  if (currentNode === NODE_INTRO) drawIntro();
+  else if (currentNode === NODE_A) drawA();
   else if (currentNode === NODE_B) drawB();
   else if (currentNode === NODE_A1) drawA1();
   else if (currentNode === NODE_A2) drawA2();

@@ -2,14 +2,18 @@
 
 function drawA() {
   // --- Story text ---
+  fill(10, 150);
+  noStroke();
+  rect(30, 30, width - 60, height - 60, 20);
   fill(255);
-  textAlign(CENTER);
   textSize(22);
+  textAlign(LEFT, TOP);
+  textAlign(LEFT);
   text(
-    "Soft blue lights drift between the trees. \
-    The air hums with quiet magic. You feel watched, but not threatened.",
-    width / 2,
-    150,
+    "Soft blue lights drift between the trees. The air hums with quiet magic. You feel watched, but not threatened.",
+    60,
+    70,
+    MAX_WIDTH,
   );
 
   // --- Choice buttons ---
@@ -19,7 +23,7 @@ function drawA() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Follow the floating lights.",
+    "Follow floating lights.",
     isMouseOver(BTN_POSITIONS[0], BTN_Y, BTN_W, BTN_H),
   );
 
@@ -29,7 +33,7 @@ function drawA() {
     BTN_Y,
     BTN_W,
     BTN_H,
-    "Ignore them and take the mossy trail.",
+    "Ignore them.",
     isMouseOver(BTN_POSITIONS[1], BTN_Y, BTN_W, BTN_H),
   );
 }

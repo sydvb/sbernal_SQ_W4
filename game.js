@@ -15,6 +15,8 @@
 // and risk a typo causing a bug.
 // CHOICES is an array used to pick a random NPC move.
 // ------------------------------------------------------------
+const NODE_INTRO = "intro";
+
 const NODE_A = "A";
 const NODE_B = "B";
 
@@ -33,21 +35,8 @@ const NODE_B1b = "B1b";
 const NODE_B2a = "B2a";
 const NODE_B2b = "B2b";
 
-// Game state constants
-const STATE_START = "start";
-const STATE_PLAY = "play";
-const STATE_OVER = "over";
-
-let currentNode = NODE_A; // Opening screen
-
-// ------------------------------------------------------------
-// GAME OVER STATE
-// gameOver becomes true when someone reaches 2 wins or all
-// 3 rounds are played.
-// overallWinner stores "player", "npc", or "draw".
-// ------------------------------------------------------------
-let gameOver = false;
-let overallWinner = null;
+// Story nodes
+let currentNode = NODE_INTRO; // Opening screen
 
 // ------------------------------------------------------------
 // storyChoose(choice)
@@ -56,7 +45,9 @@ let overallWinner = null;
 // ------------------------------------------------------------
 
 function storyChoose(choice) {
-  if (currentNode === NODE_A)
+  if (currentNode === NODE_INTRO)
+    currentNode = choice === CHOICE_1 ? NODE_A : NODE_B;
+  else if (currentNode === NODE_A)
     currentNode = choice === CHOICE_1 ? NODE_A1 : NODE_A2;
   else if (currentNode === NODE_A1)
     currentNode = choice === CHOICE_1 ? NODE_A1a : NODE_A1b;
@@ -68,4 +59,9 @@ function storyChoose(choice) {
     currentNode = choice === CHOICE_1 ? NODE_B1a : NODE_B1b;
   else if (currentNode === NODE_B2)
     currentNode = choice === CHOICE_1 ? NODE_B2a : NODE_B2b;
+}
+
+function resetGame() {
+  currentNode = NODE_INTRO;
+  gameState = STATE_START;
 }
